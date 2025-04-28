@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fancy Floating Stars Background</title>
+  <title>Floating Stars Background (Optimized)</title>
   <style>
     :root {
       --bg-color: white;
@@ -14,35 +14,23 @@
       margin: 0;
       overflow: hidden;
       background: var(--bg-color);
+      position: relative;
+      height: 100vh;
+      width: 100vw;
     }
 
     .star {
       position: absolute;
-      width: 10vw;
-      height: 10vw;
-      background: url('po_redrawn_simple.svg') no-repeat center/contain;
-      filter: invert(0%);
-      animation: float linear infinite, rotate 20s linear infinite, twinkle 5s ease-in-out infinite alternate, drift 60s linear infinite;
+      background: url('https://raw.githubusercontent.com/11414414/8888/refs/heads/main/po_redrawn_simple.svg') no-repeat center/contain;
+      background-size: contain;
+      will-change: transform, opacity;
+      pointer-events: none;
       opacity: 0.8;
+      animation: shimmer 6s ease-in-out infinite alternate;
     }
 
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes float {
-      0% { transform: translateY(100vh); }
-      100% { transform: translateY(-20vh); }
-    }
-
-    @keyframes drift {
-      0% { transform: translateX(0vw); }
-      100% { transform: translateX(10vw); }
-    }
-
-    @keyframes twinkle {
-      0% { opacity: 0.5; }
+    @keyframes shimmer {
+      0% { opacity: 0.6; }
       100% { opacity: 1; }
     }
 
@@ -66,45 +54,71 @@
 <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
 
 <script>
-  const numStars = 30; // Number of stars
+const numStars = 100;
+const stars = [];
 
-  for (let i = 0; i < numStars; i++) {
-    const star = document.createElement('div');
-    star.classList.add('star');
+for (let i = 0; i < numStars; i++) {
+  const star = document.createElement('div');
+  star.classList.add('star');
 
-    // Random horizontal position and top position
-    star.style.left = Math.random() * 100 + 'vw';
-    star.style.top = Math.random() * 100 + 'vh';
+  const size = 1 + Math.random() * 3; // 1vw - 4vw
+  const speed = 0.05 + (4 - size) * 0.05; // smaller stars move slower (parallax)
+  const opacity = 0.5 + Math.random() * 0.5;
 
-    // Random delay and duration to make it organic
-    const floatDuration = 30 + Math.random() * 20; // 30s to 50s
-    const floatDelay = Math.random() * -50; // negative delay to randomize entry
-    const twinkleDelay = Math.random() * 5; // random twinkle delay
+  star.style.width = `${size}vw`;
+  star.style.height = `${size}vw`;
+  star.style.animationDuration = `${4 + Math.random() * 4}s`;
+  star.style.opacity = opacity;
 
-    star.style.animationDuration = `${floatDuration}s, 20s, 5s, 60s`;
-    star.style.animationDelay = `${floatDelay}s, 0s, ${twinkleDelay}s, 0s`;
+  document.body.appendChild(star);
 
-    document.body.appendChild(star);
+  stars.push({
+    el: star,
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    vx: (Math.random() - 0.5) * speed * 2,
+    vy: (Math.random() - 0.5) * speed * 2,
+    rotation: Math.random() * 360,
+    rotationSpeed: 0.02 + Math.random() * 0.05
+  });
+}
+
+function animateStars() {
+  stars.forEach(star => {
+    star.x += star.vx;
+    star.y += star.vy;
+    star.rotation += star.rotationSpeed;
+
+    if (star.x < -100) star.x = window.innerWidth + 100;
+    if (star.x > window.innerWidth + 100) star.x = -100;
+    if (star.y < -100) star.y = window.innerHeight + 100;
+    if (star.y > window.innerHeight + 100) star.y = -100;
+
+    star.el.style.transform = `translate3d(${star.x}px, ${star.y}px, 0) rotate(${star.rotation}deg)`;
+  });
+
+  requestAnimationFrame(animateStars);
+}
+
+animateStars();
+
+function toggleTheme() {
+  if (getComputedStyle(document.body).backgroundColor === 'rgb(255, 255, 255)') {
+    document.documentElement.style.setProperty('--bg-color', 'black');
+    document.querySelectorAll('.star').forEach(star => {
+      star.style.filter = 'invert(100%)';
+    });
+    document.querySelector('.theme-toggle').style.color = 'white';
+    document.querySelector('.theme-toggle').style.borderColor = 'white';
+  } else {
+    document.documentElement.style.setProperty('--bg-color', 'white');
+    document.querySelectorAll('.star').forEach(star => {
+      star.style.filter = 'invert(0%)';
+    });
+    document.querySelector('.theme-toggle').style.color = 'black';
+    document.querySelector('.theme-toggle').style.borderColor = 'black';
   }
-
-  // Future toggle: invert theme
-  function toggleTheme() {
-    if (getComputedStyle(document.body).backgroundColor === 'rgb(255, 255, 255)') {
-      document.documentElement.style.setProperty('--bg-color', 'black');
-      document.querySelectorAll('.star').forEach(star => {
-        star.style.filter = 'invert(100%)';
-      });
-      document.querySelector('.theme-toggle').style.color = 'white';
-      document.querySelector('.theme-toggle').style.borderColor = 'white';
-    } else {
-      document.documentElement.style.setProperty('--bg-color', 'white');
-      document.querySelectorAll('.star').forEach(star => {
-        star.style.filter = 'invert(0%)';
-      });
-      document.querySelector('.theme-toggle').style.color = 'black';
-      document.querySelector('.theme-toggle').style.borderColor = 'black';
-    }
-  }
+}
 </script>
 
 </body>
