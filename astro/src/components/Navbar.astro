@@ -1,0 +1,96 @@
+---
+import logoLight from "/assets/logo-light.svg";
+import logoDark from "/assets/logo-dark.svg";
+---
+
+<nav id="navbar" class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[90%] max-w-7xl z-50 transition-colors duration-3000 ease-in-out bg-transparent dark:bg-black text-black dark:text-white py-4 rounded-2xl backdrop-blur-md">
+
+
+  <div class="container mx-auto flex items-center justify-between px-4">
+    
+    <!-- Left Spacer -->
+    <div class="w-10"></div>
+
+    <!-- Center Logo -->
+    <a href="/" class="flex items-center">
+      <!-- Light Logo -->
+      <img src={logoLight.src} alt="Logo Light" class="h-8 md:h-10 block dark:hidden" />
+      <!-- Dark Logo -->
+      <img src={logoDark.src} alt="Logo Dark" class="h-8 md:h-10 hidden dark:block" />
+    </a>
+
+    <!-- Right Actions -->
+    <div class="flex items-center gap-4">
+      <!-- Theme Switcher -->
+      <button type="button" onclick="window.toggleTheme()" aria-label="Toggle Theme" class="p-2 rounded-full hover:bg-primary/10 transition">
+        <!-- Sun Icon for Dark Mode -->
+        <svg class="hidden dark:block w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8-9h1M4 12H3m15.364-6.364l-.707.707M6.343 6.343l-.707.707m0 10.607l.707.707m12.02-.707l.707.707M12 5a7 7 0 100 14 7 7 0 000-14z" />
+        </svg>
+        <!-- Moon Icon for Light Mode -->
+        <svg class="dark:hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.293 17.293A8 8 0 016.707 6.707a8.002 8.002 0 0010.586 10.586z" />
+        </svg>
+      </button>
+
+      <!-- Cart Icon -->
+      <a href="/cart" class="relative group">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M3 3h2l.4 2M7 13h10l4-8H5.4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="9" cy="21" r="1"/>
+          <circle cx="20" cy="21" r="1"/>
+        </svg>
+        <!-- Cart badge -->
+        <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+          0
+        </span>
+      </a>
+
+    </div>
+
+  </div>
+</nav>
+
+<!-- Scroll and Theme Script -->
+<script is:inline>
+    if (typeof window !== 'undefined') {
+      const navbar = document.getElementById('navbar');
+  
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+          navbar.classList.add('bg-white', 'dark:bg-black', 'backdrop-blur-md', 'py-2');
+          navbar.classList.remove('bg-transparent', 'py-4');
+        } else {
+          navbar.classList.remove('bg-white', 'dark:bg-black', 'backdrop-blur-md', 'py-2');
+          navbar.classList.add('opacity-90', 'py-4');
+
+        }
+        
+      });
+  
+      window.toggleTheme = function() {
+        const html = document.documentElement;
+        if (html.classList.contains('dark')) {
+          html.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+          const event = new Event('themeChange');
+          window.dispatchEvent(event);
+        } else {
+          html.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+          const event = new Event('themeChange');
+          window.dispatchEvent(event);
+        }
+      };
+  
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    
+  </script>
+  
+  

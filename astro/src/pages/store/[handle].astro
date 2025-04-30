@@ -1,0 +1,76 @@
+---
+const { handle } = Astro.params;
+
+let product = null;
+let error = null;
+
+try {
+  const response = await fetch(`${import.meta.env.PUBLIC_MEDUSA_BACKEND_URL}/store/products/${handle}`, {
+    headers: {
+      "Content-Type": "application/json",
+      "x-publishable-api-key": import.meta.env.PUBLIC_MEDUSA_TOKEN,
+    },
+  });
+
+  const data = await response.json();
+
+  if (response.ok) {
+    product = data.product;
+  } else {
+    error = data.message || "Product not found.";
+  }
+} catch (err) {
+  console.error("Failed to load product:", err);
+
+  if (err instanceof Error) {
+    error = err.message;
+  } else {
+    error = "Unknown error";
+  }
+}
+---
+
+
+
+<html lang="en">
+  <head>
+    <title>{product ? product.title : "Product Not Found"}</title>
+  </head>
+  <body class="bg-background dark:bg-background-dark text-text dark:text-text-dark">
+    <div class="container mx-auto py-10 px-4">
+
+      {error && (
+        <div class="text-center text-red-500">
+          <h1>Error</h1>
+          <p>{error}</p>
+        </div>
+      )}
+
+      {product && (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="rounded-xl overflow-hidden">
+            <img src={product.thumbnail} alt={product.title} class="w-full object-cover" />
+          </div>
+
+          <div>
+            <h1 class="text-4xl font-bold mb-4">{product.title}</h1>
+
+            <p class="text-xl font-semibold text-primary mb-6">
+              {product?.variants?.[0]?.prices?.[0]?.amount / 100}{" "}
+              {product?.variants?.[0]?.prices?.[0]?.currency_code.toUpperCase()}
+            </p>
+
+            <div class="prose dark:prose-invert mb-6">
+              {product.description}
+            </div>
+
+            <button class="px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-dark transition">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      )}
+
+    </div>
+  </body>
+</html>

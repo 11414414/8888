@@ -1,0 +1,13 @@
+---
+import { CartProvider } from "../contexts/CartContext.jsx";
+import Navbar from '../components/Navbar.astro';
+import FloatingStars from '../components/FloatingStars.astro';
+---
+
+<Navbar />
+<FloatingStars />
+
+
+<CartProvider>
+  <slot />
+</CartProvider>

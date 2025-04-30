@@ -1,0 +1,39 @@
+---
+import HeroSection from "../components/HeroSection.astro";
+import FeaturedProducts from "../components/FeaturedProducts.astro";
+import Navbar from '../components/Navbar.astro';
+import FloatingStars from '../components/FloatingStars.astro';
+---
+
+<Navbar />
+<FloatingStars />
+
+<main>
+
+    <body>
+        
+        <HeroSection />
+        <FeaturedProducts />
+
+
+        <section class="h-screen w-full flex items-center justify-center text-4xl snap-start bg-red-300 opacity-90">
+          Section 1
+        </section>
+      
+        <section class="h-screen w-full flex items-center justify-center text-4xl snap-start bg-green-300 opacity-90">
+          Section 2
+        </section>
+      
+        <section class="h-screen w-full flex items-center justify-center text-4xl snap-start bg-blue-300 opacity-90">
+          Section 3
+        </section>
+      
+        <section class="h-screen w-full flex items-center justify-center text-4xl snap-start bg-yellow-300 opacity-90">
+          Section 4
+        </section>
+        
+      </body>
+
+
+    
+</main>

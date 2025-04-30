@@ -1,0 +1,31 @@
+  .stars-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    z-index: -1; /* behind all content */
+  }
+  
+  .star {
+    position: absolute;
+    background: url('/assets/logo-light.svg') no-repeat center/contain;
+    background-size: contain;
+    will-change: transform, opacity;
+    pointer-events: none;
+    animation: shimmer 1s ease-in-out infinite alternate;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+  }
+
+  @keyframes shimmer {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+  }
+  
+  @keyframes zoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+  }
+  
